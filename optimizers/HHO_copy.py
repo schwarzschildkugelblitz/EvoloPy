@@ -17,6 +17,7 @@ import numpy
 import math
 from solution import solution
 import time
+from scipy import stats
 
 
 def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
@@ -76,8 +77,7 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
 
         # Update the location of Harris' hawks
         for i in range(0, SearchAgents_no):
-
-            E0 = 2 * random.random() - 1  # -1<E0<1
+            E0 = (2 * random.random() - 1)*(stats.lognorm(0.7, scale=numpy.exp(2)).ppf(0.005)) # -1<E0<1
             Escaping_Energy = E1 * (
                 E0
             )  # escaping energy of rabbit Eq. (3) in the paper
@@ -113,20 +113,19 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
                 if (
                     r >= 0.5 and abs(Escaping_Energy) < 0.5
                 ):  # Hard besiege Eq. (6) in paper
-                    P = numpy.asarray([x for x in numpy.random.uniform(0, 1,dim)])
                     X[i, :] = (Rabbit_Location) - Escaping_Energy * abs(
-                        Rabbit_Location - X[i, :]*(0.01*(numpy.tan(numpy.array([(numpy.pi)*(P[:]-1/2)]))))
+                        Rabbit_Location - X[i, :]
                     )
 
                 if (
                     r >= 0.5 and abs(Escaping_Energy) >= 0.5
                 ):  # Soft besiege Eq. (4) in paper
-                    V = numpy.asarray([x for x in numpy.random.uniform(0, 1, dim)])
+                    # V = numpy.asarray([x for x in numpy.random.uniform(0, 1, dim)])
                     Jump_strength = 2 * (
                         1 - random.random()
                     )  # random jump strength of the rabbit
                     X[i, :] = (Rabbit_Location - X[i, :]) - Escaping_Energy * abs(
-                        Jump_strength * Rabbit_Location - X[i, :]*(numpy.tan(numpy.pi*V[:]/2))
+                        Jump_strength * Rabbit_Location - X[i, :]
                     )
 
                 # phase 2: --------performing team rapid dives (leapfrog movements)----------
@@ -191,7 +190,7 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
     s.endTime = time.strftime("%Y-%m-%d-%H-%M-%S")
     s.executionTime = timerEnd - timerStart
     s.convergence = convergence_curve
-    s.optimizer = "HHO"
+    s.optimizer = "HHO_copy"
     s.objfname = objf.__name__
     s.best = Rabbit_Energy
     s.bestIndividual = Rabbit_Location
