@@ -115,7 +115,7 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
                 ):  # Hard besiege Eq. (6) in paper
                     P = numpy.asarray([x for x in numpy.random.uniform(0, 1, (SearchAgents_no, dim))])
                     X[i, :] = (Rabbit_Location) - Escaping_Energy * abs(
-                        Rabbit_Location - X[i, :](0.01(numpy.tan(numpy.array (numpy.pi*(P[i, :]-1/2)))))
+                        Rabbit_Location - X[i, :](0.01(numpy.tan(numpy.array(numpy.pi*(P[i, :]-1/2)))))
                     )
 
                 if (
