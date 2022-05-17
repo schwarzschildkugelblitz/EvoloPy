@@ -9,7 +9,7 @@ from optimizer import run
 
 # Select optimizers
 # "SSA","PSO","GA","BAT","FFA","GWO","WOA","MVO","MFO","CS","HHO","SCA","JAYA","DE"
-optimizer = ["HHO_copy", "HHO"]
+optimizer = ["GROM", "HHO"]
 
 # Select benchmark function"
 # "F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13","F14","F15","F16","F17","F18","F19"

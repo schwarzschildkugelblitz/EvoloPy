@@ -20,6 +20,7 @@ import optimizers.SCA as sca
 import optimizers.JAYA as jaya
 import optimizers.DE as de
 import optimizers.HHO_copy as hho_copy
+import optimizers.GROM as grom
 import benchmarks
 import csv
 import numpy
@@ -68,6 +69,8 @@ def selector(algo, func_details, popSize, Iter):
         x = de.DE(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     elif algo == "HHO_copy":
         x = hho_copy.HHO(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
+    elif algo == "GROM":
+        x = grom.GROM(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     else:
         return null
     return x
