@@ -38,7 +38,7 @@ Stop
 """
 
 
-def GROM(objf, lb, ub, dim, SearchAgents_no, Max_iter):
+def MROM(objf, lb, ub, dim, SearchAgents_no, Max_iter, m=7 ):
 
     # Max_iter=1000
     # lb=-100
@@ -71,7 +71,7 @@ def GROM(objf, lb, ub, dim, SearchAgents_no, Max_iter):
     s = solution()
 
     # Loop counter
-    print('GROM is optimizing  "' + objf.__name__ + '"')
+    print('MROM is optimizing  "' + objf.__name__ + '"')
 
     timerStart = time.time()
     s.startTime = time.strftime("%Y-%m-%d-%H-%M-%S")
@@ -147,9 +147,9 @@ def GROM(objf, lb, ub, dim, SearchAgents_no, Max_iter):
             
             T = i/Max_iter
 
-            phi = ( 1 + abs(math.sqrt(5)) ) / 2 # goldern ratio 
+            metal_ratio = ( m + abs(math.sqrt(m**2 + 4)) ) / 2 # goldern ratio 
 
-            ft = phi*(phi**T - (1-phi)**T) / abs(math.sqrt(5)) # eq 2 in the paper
+            ft = metal_ratio*(metal_ratio**T - (m-metal_ratio)**T) / abs(math.sqrt(m**2 + 4)) # eq 2 in the paper
 
             Xnew = (1-ft)*x_best + numpy.random.rand()*ft*Xt # eq 3 in the paper
             for j in range(dim):
@@ -196,25 +196,25 @@ def GROM(objf, lb, ub, dim, SearchAgents_no, Max_iter):
                     x_medium = Positions[j, :].copy()
 
             # Update the Position of search agents
-            Xnew = Positions[i,:] + (1/phi)*numpy.random.rand()*(x_best-x_worst) # eq 5 in the paper
+            Xnew = Positions[i,:] + (1/metal_ratio)*numpy.random.rand()*(x_best-x_worst) # eq 5 in the paper
             for j in range(dim):
                 Xnew[j] = numpy.clip(Xnew[j], lb[j], ub[j])
 
             if objf(Xnew) < objf(Positions[i, :]):
                 Positions[i, :] = Xnew.copy() 
                 
-        Convergence_curve[l] = best_score 
+        Convergence_curve[l] = best_score
 
         if l % 1 == 0:
             print(
             ["At iteration " + str(l) + " the best fitness is " + str(best_score)]
             )
-    print(len(Convergence_curve))        
+    print(len(Convergence_curve))
     timerEnd = time.time()
     s.endTime = time.strftime("%Y-%m-%d-%H-%M-%S")
     s.executionTime = timerEnd - timerStart
     s.convergence = Convergence_curve
-    s.optimizer = "GRMO"
+    s.optimizer = "MROM"
     s.objfname = objf.__name__
 
     return s

@@ -4,6 +4,7 @@ Created on Tue May 17 15:50:25 2016
 
 @author: hossam
 """
+from asyncio.windows_events import NULL
 from pathlib import Path
 import optimizers.PSO as pso
 import optimizers.MVO as mvo
@@ -21,6 +22,7 @@ import optimizers.JAYA as jaya
 import optimizers.DE as de
 import optimizers.HHO_copy as hho_copy
 import optimizers.GROM as grom
+import optimizers.MROM as mrom
 import benchmarks
 import csv
 import numpy
@@ -71,8 +73,10 @@ def selector(algo, func_details, popSize, Iter):
         x = hho_copy.HHO(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     elif algo == "GROM":
         x = grom.GROM(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
+    elif algo == "MROM":
+        x = mrom.MROM(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     else:
-        return null
+        return NULL
     return x
 
 
@@ -181,6 +185,7 @@ def run(optimizer, objectivefunc, NumOfRuns, params, export_flags):
                 out.close()
 
     if Export_convergence == True:
+        print(optimizer)
         conv_plot.run(results_directory, optimizer, objectivefunc, Iterations)
 
     if Export_boxplot == True:
