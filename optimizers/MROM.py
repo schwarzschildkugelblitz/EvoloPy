@@ -95,7 +95,8 @@ def MROM(objf, lb, ub, dim, SearchAgents_no, Max_iter, m=7 ):
                 Xw_pos = Positions[i, :].copy()
                 index = i
             if fitness < best_score:
-                best_score = fitness # update best score    
+                best_score = fitness # update best score
+                xb_pos = Positions[i, :].copy() # update best position    
         
         # Update Xw basewd on xavg
         if Xavg_score < Xw_score:
@@ -161,42 +162,8 @@ def MROM(objf, lb, ub, dim, SearchAgents_no, Max_iter, m=7 ):
         #phase 2
         for i in range(0, SearchAgents_no):
 
-            j = numpy.random.randint(0, SearchAgents_no-1) # j!=1
-            if j>= i :
-                j = j+1
-
-            fitness_i = objf(Positions[i, :])
-            fitness_j = objf(Positions[j, :])
-
-            if fitness_i > fitness_j:
-                if fitness_i > Xavg_score:
-                    x_worst = Positions[i, :].copy()
-                    if fitness_j > Xavg_score:
-                        x_best = Xavg_pos.copy()
-                        x_medium = Positions[j, :].copy()
-                    else:
-                        x_best = Positions[j, :].copy()
-                        x_medium = Xavg_pos.copy()
-                else :
-                    x_worst = Xavg_pos.copy()
-                    x_best = Positions[j, :].copy()
-                    x_medium = Positions[i, :].copy()
-            else:
-                if fitness_j > Xavg_score:
-                    x_worst = Positions[j, :].copy()
-                    if fitness_i > Xavg_score:
-                        x_best = Xavg_pos.copy()
-                        x_medium = Positions[i, :].copy()
-                    else:
-                        x_best = Positions[i, :].copy()
-                        x_medium = Xavg_pos.copy()
-                else :
-                    x_worst = Xavg_pos.copy()
-                    x_best = Positions[i, :].copy()
-                    x_medium = Positions[j, :].copy()
-
             # Update the Position of search agents
-            Xnew = Positions[i,:] + (1/metal_ratio)*numpy.random.rand()*(x_best-x_worst) # eq 5 in the paper
+            Xnew = Positions[i,:] + (1/metal_ratio)*numpy.random.rand()*(xb_pos-Xw_pos) # eq 5 in the paper
             for j in range(dim):
                 Xnew[j] = numpy.clip(Xnew[j], lb[j], ub[j])
 

@@ -23,6 +23,7 @@ import optimizers.DE as de
 import optimizers.HHO_copy as hho_copy
 import optimizers.GROM as grom
 import optimizers.MROM as mrom
+import optimizers.BBO as bbo
 import benchmarks
 import csv
 import numpy
@@ -53,6 +54,8 @@ def selector(algo, func_details, popSize, Iter):
         x = ffa.FFA(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     elif algo == "GWO":
         x = gwo.GWO(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
+    elif algo == "BBO":
+        x = bbo.BBO(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     elif algo == "WOA":
         x = woa.WOA(getattr(benchmarks, function_name), lb, ub, dim, popSize, Iter)
     elif algo == "MVO":

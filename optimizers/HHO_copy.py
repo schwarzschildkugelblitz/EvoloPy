@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thirsday March 21  2019
-
-@author: 
-% _____________________________________________________
-% Main paper:
-% Harris hawks optimization: Algorithm and applications
-% Ali Asghar Heidari, Seyedali Mirjalili, Hossam Faris, Ibrahim Aljarah, Majdi Mafarja, Huiling Chen
-% Future Generation Computer Systems, 
-% DOI: https://doi.org/10.1016/j.future.2019.02.028
-% _____________________________________________________
+code by Harshit Batra parts of code taken from evolopy library by hossam faris 
 
 """
 import random
@@ -17,7 +8,6 @@ import numpy
 import math
 from solution import solution
 import time
-from scipy import stats
 
 
 def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
@@ -29,6 +19,12 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
     # Max_iter=500
 
     # initialize the location and Energy of the rabbit
+    Xw_pos = numpy.zeros(dim)
+    Xw_score = float("inf")
+
+    Xavg_pos = numpy.zeros(dim)
+    Xavg_score = float("inf")
+
     Rabbit_Location = numpy.zeros(dim)
     Rabbit_Energy = float("inf")  # change this to -inf for maximization problems
 
@@ -64,20 +60,27 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
             # Check boundries
 
             X[i, :] = numpy.clip(X[i, :], lb, ub)
-
+            
+            Xavg_pos = X.mean(0)
+            Xavg_score = objf(Xavg_pos)
             # fitness of locations
             fitness = objf(X[i, :])
+
 
             # Update the location of Rabbit
             if fitness < Rabbit_Energy:  # Change this to > for maximization problem
                 Rabbit_Energy = fitness
                 Rabbit_Location = X[i, :].copy()
+            if fitness > Xw_score:
+                Xw_score = fitness
+                Xw_pos = X[i, :].copy()
 
         E1 = 2 * (1 - (t / Max_iter))  # factor to show the decreaing energy of rabbit
 
         # Update the location of Harris' hawks
         for i in range(0, SearchAgents_no):
-            E0 = (2 * random.random() - 1)*(stats.lognorm(0.7, scale=numpy.exp(2)).ppf(0.005)) # -1<E0<1
+
+            E0 = 2 * random.random() - 1  # -1<E0<1
             Escaping_Energy = E1 * (
                 E0
             )  # escaping energy of rabbit Eq. (3) in the paper
@@ -103,76 +106,75 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
 
             # -------- Exploitation phase -------------------
             elif abs(Escaping_Energy) < 1:
-                # Attacking the rabbit using 4 strategies regarding the behavior of the rabbit
+                j = numpy.random.randint(0, SearchAgents_no-1) # j!=1
+                if j>= i :
+                    j = j+1
+                fitness_i = objf(X[i, :])
+                fitness_j = objf(X[j, :])
+                if fitness_i > fitness_j:
+                    if fitness_i > Xavg_score:
+                        x_worst = X[i, :].copy()
+                        if fitness_j > Xavg_score:
+                            x_best = Xavg_pos.copy()
+                            x_medium = X[j, :].copy()
+                        else:
+                            x_best = X[j, :].copy()
+                            x_medium = Xavg_pos.copy()
+                    else :
+                        x_worst = Xavg_pos.copy()
+                        x_best = X[j, :].copy()
+                        x_medium = X[i, :].copy()
+                else:
+                    if fitness_j > Xavg_score:
+                        x_worst = X[j, :].copy()
+                        if fitness_i > Xavg_score:
+                            x_best = Xavg_pos.copy()
+                            x_medium = X[i, :].copy()
+                        else:
+                            x_best =   X[i, :].copy()
+                            x_medium = Xavg_pos.copy()
+                    else :
+                        x_worst = Xavg_pos.copy()
+                        x_best = X[i, :].copy()
+                        x_medium = X[j, :].copy()
+                # Update the Position of search agents
+                #phase 1 
+                Xt = numpy.zeros(dim)
 
-                # phase 1: ----- surprise pounce (seven kills) ----------
-                # surprise pounce (seven kills): multiple, short rapid dives by different hawks
+            
+                Xt = x_medium-x_worst #eq 1 in the paper
+                
+                T = i/Max_iter
 
-                r = random.random()  # probablity of each event
+                phi = ( 1 + abs(math.sqrt(5)) ) / 2 # goldern ratio 
 
-                if (
-                    r >= 0.5 and abs(Escaping_Energy) < 0.5
-                ):  # Hard besiege Eq. (6) in paper
-                    X[i, :] = (Rabbit_Location) - Escaping_Energy * abs(
-                        Rabbit_Location - X[i, :]
-                    )
+                ft = phi*(phi**T - (1-phi)**T) / abs(math.sqrt(5)) # eq 2 in the paper
+                a = numpy.random.rand()
+                if a>=0.5:
+                    Xnew = (1-ft)*x_best + 2*numpy.random.rand()*ft*Xt # eq 3 in the paper
+                if a<0.5:
+                    Xnew = (1-ft)*(x_best-x_medium) + 2*numpy.random.rand()*ft*Xt
+                for j in range(dim):
+                    Xnew[j] = numpy.clip(Xnew[j], lb[j], ub[j])
 
-                if (
-                    r >= 0.5 and abs(Escaping_Energy) >= 0.5
-                ):  # Soft besiege Eq. (4) in paper
-                    # V = numpy.asarray([x for x in numpy.random.uniform(0, 1, dim)])
-                    Jump_strength = 2 * (
-                        1 - random.random()
-                    )  # random jump strength of the rabbit
-                    X[i, :] = (Rabbit_Location - X[i, :]) - Escaping_Energy * abs(
-                        Jump_strength * Rabbit_Location - X[i, :]
-                    )
+                if objf(Xnew) < objf(X[i, :]):
+                    X[i, :] = Xnew.copy()   # eq 4 in the paper
+            
+        if abs(Escaping_Energy) < 1:
+            for i in range(0, SearchAgents_no):
+                    # Update the Position of search agents
+                a = numpy.random.rand()
+                if a>=0.5:
+                    Xnew = X[i,:] + (1/2)*numpy.random.rand()*(Rabbit_Location-Xw_pos) # eq 5 in the paper
+                if a<=0.5:
+                    Xnew = (X[i,:]-Rabbit_Location)+ (1/2)*numpy.random.rand()*(X.mean(0)-Xw_pos) 
+                for j in range(dim):
+                    Xnew[j] = numpy.clip(Xnew[j], lb[j], ub[j])
 
-                # phase 2: --------performing team rapid dives (leapfrog movements)----------
+                if objf(Xnew) < objf(X[i, :]):
+                    X[i, :] = Xnew.copy() 
 
-                if (
-                    r < 0.5 and abs(Escaping_Energy) >= 0.5
-                ):  # Soft besiege Eq. (10) in paper
-                    # rabbit try to escape by many zigzag deceptive motions
-                    Jump_strength = 2 * (1 - random.random())
-                    X1 = Rabbit_Location - Escaping_Energy * abs(
-                        Jump_strength * Rabbit_Location - X[i, :]
-                    )
-                    X1 = numpy.clip(X1, lb, ub)
-
-                    if objf(X1) < fitness:  # improved move?
-                        X[i, :] = X1.copy()
-                    else:  # hawks perform levy-based short rapid dives around the rabbit
-                        X2 = (
-                            Rabbit_Location
-                            - Escaping_Energy
-                            * abs(Jump_strength * Rabbit_Location - X[i, :])
-                            + numpy.multiply(numpy.random.randn(dim), Levy(dim))
-                        )
-                        X2 = numpy.clip(X2, lb, ub)
-                        if objf(X2) < fitness:
-                            X[i, :] = X2.copy()
-                if (
-                    r < 0.5 and abs(Escaping_Energy) < 0.5
-                ):  # Hard besiege Eq. (11) in paper
-                    Jump_strength = 2 * (1 - random.random())
-                    X1 = Rabbit_Location - Escaping_Energy * abs(
-                        Jump_strength * Rabbit_Location - X.mean(0)
-                    )
-                    X1 = numpy.clip(X1, lb, ub)
-
-                    if objf(X1) < fitness:  # improved move?
-                        X[i, :] = X1.copy()
-                    else:  # Perform levy-based short rapid dives around the rabbit
-                        X2 = (
-                            Rabbit_Location
-                            - Escaping_Energy
-                            * abs(Jump_strength * Rabbit_Location - X.mean(0))
-                            + numpy.multiply(numpy.random.randn(dim), Levy(dim))
-                        )
-                        X2 = numpy.clip(X2, lb, ub)
-                        if objf(X2) < fitness:
-                            X[i, :] = X2.copy()
+                
 
         convergence_curve[t] = Rabbit_Energy
         if t % 1 == 0:
@@ -190,23 +192,9 @@ def HHO(objf, lb, ub, dim, SearchAgents_no, Max_iter):
     s.endTime = time.strftime("%Y-%m-%d-%H-%M-%S")
     s.executionTime = timerEnd - timerStart
     s.convergence = convergence_curve
-    s.optimizer = "HHO_copy"
+    s.optimizer = "HHO"
     s.objfname = objf.__name__
     s.best = Rabbit_Energy
     s.bestIndividual = Rabbit_Location
 
     return s
-
-
-def Levy(dim):
-    beta = 1.5
-    sigma = (
-        math.gamma(1 + beta)
-        * math.sin(math.pi * beta / 2)
-        / (math.gamma((1 + beta) / 2) * beta * 2 ** ((beta - 1) / 2))
-    ) ** (1 / beta)
-    u = 0.01 * numpy.random.randn(dim) * sigma
-    v = numpy.random.randn(dim)
-    zz = numpy.power(numpy.absolute(v), (1 / beta))
-    step = numpy.divide(u, zz)
-    return step
