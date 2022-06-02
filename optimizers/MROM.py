@@ -54,7 +54,7 @@ def MROM(objf, lb, ub, dim, SearchAgents_no, Max_iter, m=0 ):
             Xavg_pos = Positions.mean(0)
 
             # Return back the search agents that go beyond the boundaries of the search space
-            Positions[i, :] = numpy.clip(Positions[i, j], lb, ub)
+            Positions[i, :] = numpy.clip(Positions[i, :], lb, ub)
 
             # Calculate objective function for each search agent
             fitness = objf(Positions[i, :])
