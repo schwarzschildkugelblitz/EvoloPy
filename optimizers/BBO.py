@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """
+code by Harshit Batra parts of code taken from evolopy library by hossam faris
 """
 import random
 import numpy

@@ -172,7 +172,6 @@ def GROM(objf, lb, ub, dim, SearchAgents_no, Max_iter):
             print(
             ["At iteration " + str(l) + " the best fitness is " + str(best_score)]
             )
-    print(len(Convergence_curve))
     timerEnd = time.time()
     s.endTime = time.strftime("%Y-%m-%d-%H-%M-%S")
     s.executionTime = timerEnd - timerStart
