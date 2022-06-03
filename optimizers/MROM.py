@@ -129,7 +129,7 @@ def MROM(objf, lb, ub, dim, SearchAgents_no, Max_iter, m=0 ):
                 Xnew = (1-ft)*(x_best-x_medium) + 2*numpy.random.rand()*ft*Xt
             if objf(Xnew) < objf(Positions[i, :]):
                 Positions[i, :] = Xnew.copy()
-                Positions[i, :] = numpy.clip(Positions[i, j], lb, ub)  # eq 4 in the paper
+                Positions[i, :] = numpy.clip(Positions[i, :], lb, ub)  # eq 4 in the paper
             
         #phase 2
         for i in range(0, SearchAgents_no):

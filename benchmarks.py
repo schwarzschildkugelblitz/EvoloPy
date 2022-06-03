@@ -333,32 +333,159 @@ def F23(L):
     return o
 
 # ESAs space mission design benchmarks https://www.esa.int/gsp/ACT/projects/gtop/
-from fcmaes.astro import (
-    MessFull,
-    Messenger,
-    Gtoc1,
-    Cassini1,
-    Cassini2,
-    Rosetta,
-    Tandem,
-    Sagas,
-)
-def Ca1(x):
-    return Cassini1().fun(x)
-def Ca2(x):
-    return Cassini2().fun(x)
-def Ros(x):
-    return Rosetta().fun(x)
-def Tan(x):
-    return Tandem(5).fun(x)
-def Sag(x):
-    return Sagas().fun(x)
-def Mef(x):
-    return MessFull().fun(x)
-def Mes(x):
-    return Messenger().fun(x)
-def Gt1(x):
-    return Gtoc1().fun(x)
+# from fcmaes.astro import (
+#     MessFull,
+#     Messenger,
+#     Gtoc1,
+#     Cassini1,
+#     Cassini2,
+#     Rosetta,
+#     Tandem,
+#     Sagas,
+# )
+# def Ca1(x):
+#     return Cassini1().fun(x)
+# def Ca2(x):
+#     return Cassini2().fun(x)
+# def Ros(x):
+#     return Rosetta().fun(x)
+# def Tan(x):
+#     return Tandem(5).fun(x)
+# def Sag(x):
+#     return Sagas().fun(x)
+# def Mef(x):
+#     return MessFull().fun(x)
+# def Mes(x):
+#     return Messenger().fun(x)
+# def Gt1(x):
+#     return Gtoc1().fun(x)
+
+from opfunu.cec.cec2014.function import *
+
+def C14_1(x):
+    return F1(x)
+def C14_2(x):
+    return F2(x)
+def C14_3(x):
+    return F3(x)
+def C14_4(x):
+    return F4(x)
+def C14_5(x):
+    return F5(x)
+def C14_6(x):
+    return F6(x)
+def C14_7(x):
+    return F7(x)
+def C14_8(x):
+    return F8(x)
+def C14_9(x):
+    return F9(x)
+def C14_10(x):
+    return F10(x)
+def C14_11(x):
+    return F11(x)
+def C14_12(x):
+    return F12(x)
+def C14_13(x):
+    return F13(x)
+def C14_14(x):
+    return F14(x)
+def C14_15(x):
+    return F15(x)
+def C14_16(x):
+    return F16(x)
+def C14_17(x):
+    return F17(x)
+def C14_18(x):
+    return F18(x)
+def C14_19(x):
+    return F19(x)
+def C14_20(x):
+    return F20(x)
+def C14_21(x):
+    return F21(x)
+def C14_22(x):
+    return F22(x)
+def C14_23(x):
+    return F23(x)
+def C14_24(x):
+    return F24(x)
+def C14_25(x):
+    return F25(x)
+def C14_26(x):
+    return F26(x)
+def C14_27(x):
+    return F27(x)
+def C14_28(x):
+    return F28(x)
+def C14_29(x):
+    return F29(x)
+def C14_30(x):
+    return F30(x)
+
+from opfunu.cec.cec2017.function import *
+def C17_1(x):
+    return F1(x)
+def C17_2(x):
+    return F2(x)
+def C17_3(x):
+    return F3(x)
+def C17_4(x):
+    return F4(x)
+def C17_5(x):
+    return F5(x)
+def C17_6(x):
+    return F6(x)
+def C17_7(x):
+    return F7(x)
+def C17_8(x):
+    return F8(x)
+def C17_9(x):
+    return F9(x)
+def C17_10(x):
+    return F10(x)
+def C17_11(x):
+    return F11(x)
+def C17_12(x):
+    return F12(x)
+def C17_13(x):
+    return F13(x)
+def C17_14(x):
+    return F14(x)
+def C17_15(x):
+    return F15(x)
+def C17_16(x):
+    return F16(x)
+def C17_17(x):
+    return F17(x)
+def C17_18(x):
+    return F18(x)
+def C17_19(x):
+    return F19(x)
+def C17_20(x):
+    return F20(x)
+def C17_21(x):
+    return F21(x)
+def C17_22(x):
+    return F22(x)
+def C17_23(x):
+    return F23(x)
+def C17_24(x):
+    return F24(x)
+def C17_25(x):
+    return F25(x)
+def C17_26(x):
+    return F26(x)
+def C17_27(x):
+    return F27(x)
+def C17_28(x):
+    return F28(x)
+def C17_29(x):
+    return F29(x)
+def C17_30(x):
+    return F30(x)
+
+
 
 def getFunctionDetails(a):
     # [name, lb, ub, dim]
@@ -386,44 +513,104 @@ def getFunctionDetails(a):
         "F21": ["F21", 0, 10, 4],
         "F22": ["F22", 0, 10, 4],
         "F23": ["F23", 0, 10, 4],
-        "Ca1": [
-            "Ca1",
-            Cassini1().bounds.lb,
-            Cassini1().bounds.ub,
-            len(Cassini1().bounds.lb),
-        ],
-        "Ca2": [
-            "Ca2",
-            Cassini2().bounds.lb,
-            Cassini2().bounds.ub,
-            len(Cassini2().bounds.lb),
-        ],
-        "Gt1": ["Gt1", Gtoc1().bounds.lb, Gtoc1().bounds.ub, len(Gtoc1().bounds.lb)],
-        "Mes": [
-            "Mes",
-            Messenger().bounds.lb,
-            Messenger().bounds.ub,
-            len(Messenger().bounds.lb),
-        ],
-        "Mef": [
-            "Mef",
-            MessFull().bounds.lb,
-            MessFull().bounds.ub,
-            len(MessFull().bounds.lb),
-        ],
-        "Sag": ["Sag", Sagas().bounds.lb, Sagas().bounds.ub, len(Sagas().bounds.lb)],
-        "Tan": [
-            "Tan",
-            Tandem(5).bounds.lb,
-            Tandem(5).bounds.ub,
-            len(Tandem(5).bounds.lb),
-        ],
-        "Ros": [
-            "Ros",
-            Rosetta().bounds.lb,
-            Rosetta().bounds.ub,
-            len(Rosetta().bounds.lb),
-        ],
+        "C14_1": ["C14_1", -100, 100, 30],
+        "C14_2": ["C14_2", -100, 100, 30],
+        "C14_3": ["C14_3", -100, 100, 30],
+        "C14_4": ["C14_4", -100, 100, 30],
+        "C14_5": ["C14_5", -100, 100, 30],
+        "C14_6": ["C14_6", -100, 100, 30],
+        "C14_7": ["C14_7", -100, 100, 30],
+        "C14_8": ["C14_8", -100, 100, 30],
+        "C14_9": ["C14_9", -100, 100, 30],
+        "C14_10": ["C14_10", -100, 100, 30],
+        "C14_11": ["C14_11", -100, 100, 30],
+        "C14_12": ["C14_12", -100, 100, 30],
+        "C14_13": ["C14_13", -100, 100, 30],
+        "C14_14": ["C14_14", -100, 100, 30],
+        "C14_15": ["C14_15", -100, 100, 30],
+        "C14_16": ["C14_16", -100, 100, 30],
+        "C14_17": ["C14_17", -100, 100, 30],
+        "C14_18": ["C14_18", -100, 100, 30],
+        "C14_19": ["C14_19", -100, 100, 30],
+        "C14_20": ["C14_20", -100, 100, 30],
+        "C14_21": ["C14_21", -100, 100, 30],
+        "C14_22": ["C14_22", -100, 100, 30],
+        "C14_23": ["C14_23", -100, 100, 30],
+        "C14_24": ["C14_24", -100, 100, 30],
+        "C14_25": ["C14_25", -100, 100, 30],
+        "C14_26": ["C14_26", -100, 100, 30],
+        "C14_27": ["C14_27", -100, 100, 30],
+        "C14_28": ["C14_28", -100, 100, 30],
+        "C14_29": ["C14_29", -100, 100, 30],
+        "C14_30": ["C14_30", -100, 100, 30],
+        "C17_1": ["C17_1", -100, 100, 30],
+        "C17_2": ["C17_2", -100, 100, 30],
+        "C17_3": ["C17_3", -100, 100, 30],
+        "C17_4": ["C17_4", -100, 100, 30],
+        "C17_5": ["C17_5", -100, 100, 30],
+        "C17_6": ["C17_6", -100, 100, 30],
+        "C17_7": ["C17_7", -100, 100, 30],
+        "C17_8": ["C17_8", -100, 100, 30],
+        "C17_9": ["C17_9", -100, 100, 30],
+        "C17_10": ["C17_10", -100, 100, 30],
+        "C17_11": ["C17_11", -100, 100, 30],
+        "C17_12": ["C17_12", -100, 100, 30],
+        "C17_13": ["C17_13", -100, 100, 30],
+        "C17_14": ["C17_14", -100, 100, 30],
+        "C17_15": ["C17_15", -100, 100, 30],
+        "C17_16": ["C17_16", -100, 100, 30],
+        "C17_17": ["C17_17", -100, 100, 30],
+        "C17_18": ["C17_18", -100, 100, 30],
+        "C17_19": ["C17_19", -100, 100, 30],
+        "C17_20": ["C17_20", -100, 100, 30],
+        "C17_21": ["C17_21", -100, 100, 30],
+        "C17_22": ["C17_22", -100, 100, 30],
+        "C17_23": ["C17_23", -100, 100, 30],
+        "C17_24": ["C17_24", -100, 100, 30],
+        "C17_25": ["C17_25", -100, 100, 30],
+        "C17_26": ["C17_26", -100, 100, 30],
+        "C17_27": ["C17_27", -100, 100, 30],
+        "C17_28": ["C17_28", -100, 100, 30],
+        "C17_29": ["C17_29", -100, 100, 30],
+        "C17_30": ["C17_30", -100, 100, 30],
     }
     return param.get(a, "nothing")
-'''
+
+# "Ca1": [
+        #     "Ca1",
+        #     Cassini1().bounds.lb,
+        #     Cassini1().bounds.ub,
+        #     len(Cassini1().bounds.lb),
+        # ],
+        # "Ca2": [
+        #     "Ca2",
+        #     Cassini2().bounds.lb,
+        #     Cassini2().bounds.ub,
+        #     len(Cassini2().bounds.lb),
+        # ],
+        # "Gt1": ["Gt1", Gtoc1().bounds.lb, Gtoc1().bounds.ub, len(Gtoc1().bounds.lb)],
+        # "Mes": [
+        #     "Mes",
+        #     Messenger().bounds.lb,
+        #     Messenger().bounds.ub,
+        #     len(Messenger().bounds.lb),
+        # ],
+        # "Mef": [
+        #     "Mef",
+        #     MessFull().bounds.lb,
+        #     MessFull().bounds.ub,
+        #     len(MessFull().bounds.lb),
+        # ],
+        # "Sag": ["Sag", Sagas().bounds.lb, Sagas().bounds.ub, len(Sagas().bounds.lb)],
+        # "Tan": [
+        #     "Tan",
+        #     Tandem(5).bounds.lb,
+        #     Tandem(5).bounds.ub,
+        #     len(Tandem(5).bounds.lb),
+        # ],
+        # "Ros": [
+        #     "Ros",
+        #     Rosetta().bounds.lb,
+        #     Rosetta().bounds.ub,
+        #     len(Rosetta().bounds.lb),
+        # ],
